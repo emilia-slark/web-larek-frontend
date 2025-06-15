@@ -17,7 +17,7 @@ export enum Category {
 
 export type TBasketItem = Partial<IProduct> & { id: IProduct['id'] }
 
-export type TOrder = {
+export interface TOrder {
   id?: string,
   payment: TPaymentMethod,
   email: string,
@@ -38,6 +38,30 @@ export interface IPageViewData {
   basketTotalAmount: number;
 }
 
+export interface IModalData {
+  content: HTMLElement
+}
 
+export interface IFormData {
+  valid: boolean,
+  error: string[]
+}
 
+export interface IBasketViewData {
+  items: HTMLElement[];
+  basketTotalAmount: number;
+}
 
+export interface IOrderRegistration {
+  payment: TPaymentMethod,
+  address: string
+}
+
+export interface IOrderContacts {
+  email: string,
+  phone: string
+}
+
+export interface IOrderSuccessData {
+  total: number
+}
