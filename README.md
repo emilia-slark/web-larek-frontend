@@ -329,20 +329,20 @@ type TOrderUpdatable = Pick<TOrder, 'payment' | 'email' | 'phone' | 'address'>
 |-|--------|---|
 |`constructor`|`(container: HTMLElement, events: EventEmitter)`|конструктор|
 
-#### 5.1 Входные данные для формы контактных данных - `interface IOrderContacts`
+#### 7.1 Входные данные для формы контактных данных - `interface IOrderContacts`
 
 |Название|Тип|Описание|
 |-|--------|---|
 |`email`|`string`|эл. почта|
 |`phone`|`string`|номер телефона| 
 
-#### 6 Компонент отображения успешного заказа - `class OrderSuccess extends Component<IOrderSuccessData>`
+#### 8. Компонент отображения успешного заказа - `class OrderSuccess extends Component<IOrderSuccessData>`
 
 |Название|Тип|Описание|
 |-|--------|---|
 |`constructor`|`(container: HTMLElement, events: EventEmitter)`|конструктор|
 
-#### 6.1 Входные данные для компонента успешного заказа - `interface IOrderSuccessData`
+#### 8.1 Входные данные для компонента успешного заказа - `interface IOrderSuccessData`
 
 |Название|Тип|Описание|
 |-|--------|---|
