@@ -37,9 +37,7 @@ npm run build   # запустить сборку проекта
 
 |Название|Тип|Описание|
 |-|--------|---|
-|`constructor`|`()`|конструктор|
-|`#options`|`RequestInit`|параметры запросов|
-|`+baseUrl`|`string`|базовый URL|
+|`constructor`|`(+baseUrl: string, #options: RequestInit)`|конструктор|
 |`#handleResponse`|`(response: Response): Promise<object>`|метод обработки ответа сервера|
 |`get`|`(uri: string): Promise<object>`|`GET`-запрос|
 |`post`|`(uri: string, data: object, method: ApiPostMethods = 'POST'): Promise<object>`|`POST`-запрос|
@@ -62,7 +60,7 @@ npm run build   # запустить сборку проекта
 
 |Название|Тип|Описание|
 |-|--------|---|
-|`constructor`|`(#container: HTMLElement)`|конструктор|
+|`#constructor`|`(#container: HTMLElement)`|конструктор|
 |`+toggleClass`|`(element: HTMLElement, className: string, force?: boolean)`|Переключить класс|
 |`#setText`|`(element: HTMLElement, className: string, force?: boolean)`|установить текстовое содержимое|
 |`+setDisabled`|`(element: HTMLElement, state: boolean)`|сменить статус блокировки|
@@ -75,7 +73,9 @@ npm run build   # запустить сборку проекта
 
 |Название|Тип|Описание|
 |-|--------|---|
-|`constructor`|`(#container: HTMLElement, events: EventEmitter)`|конструктор|
+|`constructor`|`(#container: HTMLElement, #events: EventEmitter)`|конструктор|
+|`#closeButton`|`HTMLButtonElement`|кнопка закрытия модального окна|
+|`#contentContainer`|`HTMLElement`|содержимое модального окна|
 |`set content`|`(value: HTMLElement)`|сеттер для отображения содержимого окна|
 |`+open`|`()`|открыть модальное окно|
 |`+close`|`()`|закрыть модальное окно|
@@ -86,17 +86,19 @@ npm run build   # запустить сборку проекта
 |-|--------|---|
 |`content`|`HTMLElement`|содержимое модального окна|
 
-#### 5. Компонент формы - `class Form<T> extends Component<IFormData>`
+#### 5. Компонент формы - `class Form<T> extends Component<IFormState>`
 
 |Название|Тип|Описание|
 |-|--------|---|
-|`constructor`|`(#container: HTMLFormElement, events: EventEmitter)`|конструктор|
+|`constructor`|`(#container: HTMLFormElement, #events: EventEmitter)`|конструктор|
+|`submitButton`|`HTMLButtonElement`|кнопка `submit` формы|
+|`errorsLabel`|`HTMLElement`|DOM-элемент для отображения текста ошибки валидации формы|
 |`#onInputChange`|`(field: keyof T, value: string)`|обработчик события ввода информации пользователем в формах|
-|`set errors`|`(value: string[]) `|сеттер для текста ошибки|
+|`set errors`|`(value: string[])`|сеттер для текста ошибки|
 |`set valid`|`(value: boolean)`|сеттер для валидности формы|
-|`render`|`(state: Partial<T> & IFormData)`|метод отображения формы|
+|`render`|`(state: Partial<T> & IFormState)`|метод отображения формы|
 
-#### 5.1 Входные данные для формы - `interface IFormData`
+#### 5.1 Входные данные для формы - `interface IFormState`
 |Название|Тип|Описание|
 |-|--------|---|
 |`valid`|`boolean`|валидность формы|
@@ -107,28 +109,22 @@ npm run build   # запустить сборку проекта
 Класс является базовым компонентом для отображения информации о товаре `IProduct` в разных частях приложения. Экземпляр этого класса создает DOM-элемент карточки и вешает нужные слушатели, компонент только сообщает о событии, не принимая бизнес-решений. Является каркасом для:
 1. Карточки в галерее на главной странице - `CardCatalogView`;
 2. Содержимого модального окна с описанием товара - `CardModalView`;
-3. Элемента списка товаров в корзине - `CardBasketView`;
+3. Элемента списка товаров в корзине - `CardBasketView`.
 
 |Название|Тип|Описание|
 |-|--------|---|
 |`constructor`|`(props: ICardProps)`|конструктор|
-|`#elementId`|`IProduct['id']`|идентификатор|
-|`#elementTitle`|`HTMLElement`|название|
+|`#elementTitle`|`HTMLElement`|название в карточке|
 |`#elementPrice`|`HTMLElement`|цена|
 |`#elementButton`|`HTMLButtonElement`|кнопка карточки|
 |`set title`|`(value: string)`|сеттер названия в карточке|
-|`get title`|`(): string`|геттер названия товара карточки|
 |`set price`|`(value: number)`|сеттер цены в карточке|
-|`set id`|`(value: IProduct['id']):`|сеттер `id` карточки|
-|`get id`|`(): IProduct['id']`|геттер `id` карточки|
 
 #### 6.1 Данные для карточки - `interface ICardProps`
 
 |Название|Тип|Описание|
 |-|--------|---|
 |`container`|`HTMLElement`|контейнер-оболочка|
-|`events`|`EventEmitter`|брокер событий|
-|`index?`|`number`|индекс карточки|
 |`actions?`|`ICardActions`|набор обработчиков|
 
 #### 6.2 Набор обработчиков событий - `interface ICardActions`
@@ -149,18 +145,25 @@ npm run build   # запустить сборку проекта
 |`description`|`string`|описание|
 |`image`|`string`|URL картинки|
 |`title`|`string`|название|
-|`category`|`Category`|категория|
+|`category`|`TCategory`|категория|
 |`price`|`number \| null`|цена|
 
-#### 1.1 Категории товаров - `enum Category`
+#### 1.1 Категории товаров - `settings.CATEGORY_SELECTOR`
+
+Объявлен в `utils/constants.ts`. Категории ставит в соответствие селектор.
 
 |Название|Значение|
 |-|--------|
-|`softskill`|`"софт-скил"`|
-|`hardskill`|`"хард-скил"`|
-|`button`|`"кнопка"`|
-|`additional`|`"дополнительное"`|
-|`other`|`"другое"`|
+|`"софт-скил"`|`"card__category_soft"`|
+|`"хард-скил"`|`"card__category_hard"`|
+|`"кнопка"`|`"card__category_button"`|
+|`"дополнительное"`|`"card__category_additional"`|
+|`"другое"`|`"card__category_other"`|
+
+#### 1.2 Тип категории товаров - `type TCategory`
+```
+type TCategory = keyof typeof settings.CATEGORY_SELECTOR
+```
 
 #### 2. Модель работы каталога - `class CatalogModel`
 
@@ -168,12 +171,10 @@ npm run build   # запустить сборку проекта
 
 |Название|Тип|Описание|
 |-|--------|---|
-|`constructor`|`(events: EventEmitter, api: Api)`|конструктор|
-|`-events`|`EventEmitter`|для генерации событий|
-|`-api`|`Api`|для работы с сервером|
+|`constructor`|`(-events: EventEmitter, -api: Api)`|конструктор|
 |`-items`|`IProduct[]`|товары каталога|
 |`+fetchCatalog`|`(): Promise<IProduct[]>`|загрузить каталог товаров|
-|`+setItems`|`(data: IProduct[]): void`|метод присвоения товаров|
+|`+setItems`|`(data: IProduct[])`|метод присвоения товаров|
 |`+getItems`|`(): IProduct[]`|вернуть все товары|
 |`+getItem`|`(id: IProduct['id']): IProduct \| undefined`|вернуть конкретный товар|
 
@@ -181,25 +182,23 @@ npm run build   # запустить сборку проекта
 
 #### 3. Модель работы корзины - `class BasketModel`
 
-Класс описывает основную логику работы корзины на уровне модели данных. На вход принимает брокер событий для генерации соответствующих событий для рендера. Пользователь может добавлять и удалять товары из корзины. Также определены методы : `get totalAmount()` для вывода количества товаров в шапке главной страницы, `getItemsId()` и `get totalPrice()` для передачи списка `id` товаров и итоговой стоимости в заказ `Order`.
+Класс описывает основную логику работы корзины на уровне модели данных. На вход принимает брокер событий для генерации соответствующих событий для рендера. Пользователь может добавлять и удалять товары из корзины. Также определены методы : `get totalAmount()` для вывода количества товаров в шапке главной страницы, `getItemsId()` и `get totalPrice()` для передачи списка `id` товаров и итоговой стоимости в заказ `Order`. Класс сохраняет данные товары в локальное хранилище.
 
 |Название|Тип|Описание|
 |-|--------|---|
-|`constructor`|`(events: EventEmitter)`|конструктор|
-|`-events`|`EventEmitter`|для обработки событий|
-|`-basket`|`items: IProduct['id'][]`|товары в корзине|
-|`+addItem`|`(id: IProduct['id']): void`|добавить товар|
-|`+deleteItem`|`(id: IProduct['id']): void`|удалить товар|
-|`+getOrderItems`|`(): IProduct['id'][]`|вернуть все `id` товаров в корзине|
+|`constructor`|`(-events: EventEmitter)`|конструктор|
+|`-basket`|`Map<IProduct['id'], number>`|`id` товара в корзине и его цена|
+|`+loadFromStorage`|`()`|загрузить товары в корзины из локального хранилища|
+|`-handleStorage`|`()`|сохранение данных в локальное хранилище|
+|`+addItem`|`(id: IProduct['id'], price: number)`|добавить товар|
+|`+deleteItem`|`(id: IProduct['id'])`|удалить товар|
+|`+getIdItems`|`(): IProduct['id'][]`|вернуть все `id` товаров в корзине|
+|`+isInBasket`|`(id: IProduct['id']): boolean`|проверка есть ли данный товар в корзине|
+|`+reset`|`()`|метод очистки корзины|
 |`+get totalAmount`|`number`|вернуть количество товаров в корзине|
 |`+get totalPrice`|`number`|вернуть итоговую стоимость|
 
-#### 3.1 Тип товаров в корзине - 
-```
-type TBasketItem = Partial<IProduct> & { id: IProduct['id'] }
-```
-
-#### 4. Структура заказа - `type TOrder`
+#### 4. Структура заказа - `interface IOrder`
 
 |Название|Тип|Описание|
 |-|--------|---|
@@ -210,8 +209,6 @@ type TBasketItem = Partial<IProduct> & { id: IProduct['id'] }
 |`address`|`string`|адрес|
 |`total`|`number`|итоговая стоимость|
 |`items`|`IProduct['id'][]`|список покупаемых товаров|
-
-> `id` будет присваиваться после успешного запроса на сервер
 
 #### 4.1 Способы оплаты заказа - 
 ```
@@ -224,19 +221,20 @@ type TPaymentMethod = "online" | "cash"
 
 |Название|Тип|Описание|
 |-|--------|---|
-|`constructor`|`(events: EventEmitter, api: Api, items: IProduct['id'][], price: number)`|конструктор|
-|`-events`|`EventEmitter`|для обработки событий|
-|`-api`|`Api`|для работы с сервером|
-|`-order`|`Partial<TOrder>`|заказ|
-|`+setOrderInfo`|`(info: Partial<TOrderUpdatable>): void`|обновление информации о заказе|
-|`+validate`|`(): boolean`|валидация данных заказа|
-|`+postOrder`|`(): Promise<TOrder>`|сделать заказ|
+|`constructor`|`(-events: EventEmitter, -api: Api)`|конструктор|
+|`-order`|`Partial<IOrder>`|заказ|
+|`-validationErrors`|`TFormErrors`|содержит ошибки валидации форм по полям|
+|`+setOrderInfo`|`(info: Partial<TOrderUpdatable>)`|обновление информации о заказе|
+|`+validateRegistration`|`(): boolean`|валидация данных по форме с методом оплаты и адресом|
+|`+validateContacts`|`(): boolean`|валидация данных по форме с эл. почтой и телефоном|
+|`+reset`|`()`|очистка данных заказа|
+|`+postOrder`|`(): Promise<IOrder>`|сделать заказ|
 
 > Метод `setOrderInfo(info)` позволяет обновить информацию о текущем заказе, например, только телефон - `setOrderInfo({ phone: "000" })`, или эл. почту с адресом доставки -  `setOrderInfo({ email: "000@aaa.ru", address: "г. Калининград..." })`, перезаписывая свойства `this.order`. Тип аргумента не позволит перезаписать другие свойства.
 
 #### 5.1 Тип полей заказа из форм -
 ```
-type TOrderUpdatable = Pick<TOrder, 'payment' | 'email' | 'phone' | 'address'>
+type TOrderUpdatable = Pick<TOrder, 'payment' | 'email' | 'phone' | 'address' | "items" | "total">
 ```
 
 ---
@@ -249,11 +247,10 @@ type TOrderUpdatable = Pick<TOrder, 'payment' | 'email' | 'phone' | 'address'>
 
 |Название|Тип|Описание|
 |-|--------|---|
-|`constructor`|`(container: HTMLElement, events: EventEmitter)`|конструктор|
-|`#elementBasket`|`HTMLButtonElement`|элемент в DOM, содержащий кнопку корзины|
+|`constructor`|`(+container: HTMLElement, onOpenBasket: () => void)`|конструктор|
+|`#basketButton`|`HTMLButtonElement`|элемент в DOM, содержащий кнопку корзины|
 |`#elementBasketCounter`|`HTMLElement`|элемент в DOM, содержащий количество товаров в корзине|
 |`#catalogContainer`|`HTMLElement`|контейнер для рендеринга каталога товаров|
-|`#onClick`|`(): void`|для создания событий по клику на корзину|
 |`set cards`|`(value: HTMLElement[])`|сеттер контейнера с каталогом|
 |`set basketTotalAmount`|`(value: number)`|сеттер для отображения количества товаров в корзине|
 |`set locked`|`(value: boolean)`|сеттер для установки запрета на прокрутку|
@@ -264,7 +261,6 @@ type TOrderUpdatable = Pick<TOrder, 'payment' | 'email' | 'phone' | 'address'>
 |-|--------|---|
 |`cards`|`HTMLElement[]`|каталог товаров|
 |`basketTotalAmount`|`number`|количество товаров в корзине|
-|`locked`|`boolean`|устанавливает запрет на прокрутку страницы при открытом модальном окне|
 
 #### 2. Карточка в галерее на главной странице - `class CardCatalogView extends Card`
 
@@ -273,34 +269,45 @@ type TOrderUpdatable = Pick<TOrder, 'payment' | 'email' | 'phone' | 'address'>
 |Название|Тип|Описание|
 |-|--------|---|
 |`constructor`|`(props: ICardProps)`|конструктор|
-|`#elementCategory`|`HTMLElement \| null`|элемент в DOM, содержащий категорию карточки товара|
-|`#elementImage`|`HTMLElementt \| null`|картинка|
-|`set category`|`(value: string)`|сеттер категории в карточке товара|
+|`#elementCategory`|`HTMLElement`|элемент в DOM, содержащий категорию карточки товара|
+|`#elementImage`|`HTMLImageElement`|картинка|
+|`set category`|`(value: TCategory)`|сеттер категории в карточке товара|
 |`set image`|`(value: string)`|сеттер картинки в карточке|
 
-#### 3. Карточка - содержимое модального окна с описанием товара - `class CardModalView extends Card`
+#### 3. Карточка - содержимое модального окна с описанием товара - `class CardModalView extends CardCatalogView`
 
-Представляет собой карточку с кнопкой "В корзину" внутри (в `props.actions.onClick` передается коллбек генерации событий `basket:items:add` и `basket:items:change`).
+Представляет собой карточку с кнопкой "В корзину" внутри. В `props.actions.onClick` передается коллбек генерации событий `basket:items:add`/`basket:items:remove`.
 
 |Название|Тип|Описание|
 |-|--------|---|
 |`constructor`|`(props: ICardProps)`|конструктор|
-|`#elementCategory`|`HTMLElement \| null`|элемент в DOM, содержащий категорию карточки товара|
-|`#elementImage`|`HTMLElementt \| null`|картинка|
-|`#elementDescription`|`HTMLElementt \| null`|картинка|
-|`set category`|`(value: string)`|сеттер категории в карточке товара|
-|`set image`|`(value: string)`|сеттер картинки в карточке|
-|`set description`|`(value: string \| string[])`|сеттер описания карточки|
+|`#elementDescription`|`HTMLElement`|описание|
+|`set description`|`(value: string)`|сеттер описания карточки|
+|`set isInBasket`|`(value: string)`|сеттер состояния кнопки "В корзину"/"Убрать с корзины" для товаров, добавленных в корзину|
+|`set isPriceless`|`(value: string)`|сеттер состояния кнопки "В корзину" для бесценных товаров|
 
 #### 4. Карточка - элемент списка товаров в корзине - `class CardBasketView extends Card`
 
-Представляет собой карточку с кратким описанием с кнопкой удаления из корзины внутри (в `props.actions.onClick` передается коллбек генерации событий `basket:items:remove`и `basket:items:change`).
+Представляет собой карточку с кратким описанием с кнопкой удаления из корзины внутри. В `props.actions.onClick` передается коллбек генерации события `basket:items:remove`.
 
 |Название|Тип|Описание|
 |-|--------|---|
 |`constructor`|`(props: ICardProps)`|конструктор|
+|`#indexElement`|`HTMLElement`|конструктор|
+|`set index`|`(value: number)`|cеттер для отображения индекса карточки|
 
 #### 5. Корзина - `class BasketView extends Component<IBasketViewData>`
+
+Представляет собой содержимое модального окна при состоянии открытой корзины. В `onOrder` передается коллбек генерации события `order:registration`.
+
+|Название|Тип|Описание|
+|-|--------|---|
+|`constructor`|`(container: HTMLElement, onOrder: () => void)`|конструктор|
+|`#cardsContainer`|`HTMLUListElement`|контейнер для карточек товаров|
+|`#orderButton`|`HTMLButtonElement`|кнопка "Оформить"|
+|`#priceElement`|`HTMLElement`|элемент для отображения итоговой стоимости|
+|`set items`|`(value: HTMLElement[])`|сеттер для отображения карточек в корзине|
+|`set basketTotalAmount`|`(value: number)`|сеттер для отображения итоговой стоимости заказа в корзине| 
 
 #### 5.1 Входные данные для корзины - `interface IBasketViewData`
 
@@ -314,13 +321,15 @@ type TOrderUpdatable = Pick<TOrder, 'payment' | 'email' | 'phone' | 'address'>
 |Название|Тип|Описание|
 |-|--------|---|
 |`constructor`|`(container: HTMLElement, events: EventEmitter)`|конструктор|
+|`#elementCard`|`HTMLButtonElement`|кнопка "Онлайн"|
+|`#elementCash`|`HTMLButtonElement`|кнопка "При получении"|
+|`+reset`|`()`|сбросить состояния кнопок выбора способа оплаты|
 
 #### 6.1 Входные данные для формы регистрации заказа - `interface IOrderRegistration`
 
 |Название|Тип|Описание|
 |-|--------|---|
 |`payment`|`TPaymentMethod`|метод оплаты|
-|`address`|`string`|адрес доставки|
 |`address`|`string`|адрес доставки|
 
 #### 7. Форма контактных данных - `class OrderContacts extends Form<IOrderContacts>`
@@ -341,6 +350,7 @@ type TOrderUpdatable = Pick<TOrder, 'payment' | 'email' | 'phone' | 'address'>
 |Название|Тип|Описание|
 |-|--------|---|
 |`constructor`|`(container: HTMLElement, events: EventEmitter)`|конструктор|
+|`set total`|`(value: number)`|сеттер для отображения итоговой стоимости заказа|
 
 #### 8.1 Входные данные для компонента успешного заказа - `interface IOrderSuccessData`
 
@@ -359,14 +369,14 @@ type TOrderUpdatable = Pick<TOrder, 'payment' | 'email' | 'phone' | 'address'>
 |`catalog:items:select`|нажатие на карточку товара из каталога|открытие модального окна с описанием товара|
 |`basket:items:add`|нажатие кнопки "В корзину" на карточке товара|добавление товара в корзину на уровне модели данных|
 |`basket:open`|нажатие кнопки "корзина" в шапке|открытие модального окна c содержимым корзины|
-|`basket:items:remove`|нажатие кнопки "удалить товар" в корзине|удаление товара из корзины на уровне модели, отрисовка содержимого корзины|
-|`basket:items:change`|любое изменение содержимого корзины|отрисовка количества товаров корзины в шапке|
+|`basket:items:remove`|нажатие кнопки "Убрать с корзины" на карточке товара/"удалить" на модального окна корзины|удаление товара из корзины на уровне модели, отрисовка содержимого корзины|
+|`basket:items:change`|любое изменение содержимого корзины на уровне данных|отрисовка количества товаров корзины в шапке и содержимого корзины|
 |`order:registration`|нажатие кнопки "Оформить" в корзине|открытие модального окна c выбором метода оплаты и вводом адреса доставки, добавление товаров из корзины в текущий заказ на уровне модели данных|
-|`order:contacts`|нажатие кнопки "Далее" в модальном окне с выбором метода оплаты|открытие модального окна с вводом эл. почты и номера телефона|
-|`order:post`|нажатие кнопки "Оплатить" в модальном окне с вводом эл. почты и номера телефона|отправка `post` запроса с телом заказа на бекенд на уровне модели данных|
+|`order:submit`|нажатие кнопки "Далее" в модальном окне с выбором метода оплаты|открытие модального окна с вводом эл. почты и номера телефона|
+|`contacts:submit`|нажатие кнопки "Оплатить" в модальном окне с вводом эл. почты и номера телефона|отправка `post` запроса с телом заказа на бекенд на уровне модели данных|
 |`order:status:success`|получение успешного ответа с бекенда|открытие модального окна со статусом оформления заказа, отрисовка итоговой стоимости в этом окне|
 |`form:order:change`|ввод данных пользователем в форму|валидация полей|
-|`form:order:registration:validate:error`|завершение валидации формы|получение ошибки|
-|`form:order:contacts:validate:error`|завершение валидации формы|получение ошибки|
+|`form:order:registration:validate`|завершение валидации формы|получение ошибки|
+|`form:order:contacts:validate`|завершение валидации формы|получение ошибки|
 |`modal:state:open`|открытие модального окна|выставление запрета скролла страницы|
 |`modal:state:close`|закрытие модального окна|снятие запрета скролла страницы|

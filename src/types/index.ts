@@ -1,23 +1,17 @@
+import { settings } from "../utils/constants";
+
 export interface IProduct {
   id: string,
   description: string,
   image: string,
   title: string,
-  category: Category,
-  price: number
+  category: TCategory,
+  price: number | null
 }
 
-export enum Category {
-  softskill = "софт-скил",
-  hardskill = "хард-скил",
-  button = "кнопка",
-  additional = "дополнительное",
-  other = "другое",
-}
+export type TCategory = keyof typeof settings.CATEGORY_SELECTOR
 
-export type TBasketItem = Partial<IProduct> & { id: IProduct['id'] }
-
-export interface TOrder {
+export interface IOrder {
   id?: string,
   payment: TPaymentMethod,
   email: string,
@@ -27,41 +21,20 @@ export interface TOrder {
   items: IProduct['id'][]
 }
 
-type TPaymentMethod = "online" | "cash"
+export type TPaymentMethod = "online" | "cash"
 
-export type TOrderUpdatable = Pick<TOrder, 'payment' | 'email' | 'phone' | 'address'>;
-
-//////////////////////////////////////////////////////////////
-
-export interface IPageViewData {
-  cards: HTMLElement[],
-  basketTotalAmount: number;
+export interface IOrderForm {
+  payment: TPaymentMethod;
+  address: string;
+  email: string;
+  phone: string;
 }
 
-export interface IModalData {
-  content: HTMLElement
+interface ICardActions {
+  onClick: (event: MouseEvent) => void
 }
 
-export interface IFormData {
-  valid: boolean,
-  error: string[]
-}
-
-export interface IBasketViewData {
-  items: HTMLElement[];
-  basketTotalAmount: number;
-}
-
-export interface IOrderRegistration {
-  payment: TPaymentMethod,
-  address: string
-}
-
-export interface IOrderContacts {
-  email: string,
-  phone: string
-}
-
-export interface IOrderSuccessData {
-  total: number
+export interface ICardProps {
+  container: HTMLElement,
+  actions?: ICardActions
 }

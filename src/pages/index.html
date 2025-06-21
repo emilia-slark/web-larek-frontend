@@ -39,26 +39,6 @@
 		</div>
 	</div>
 
-	<div class="modal modal_active">
-		<div class="modal__container">
-			<button class="modal__close" aria-label="закрыть"></button>
-			<div class="modal__content">
-				<div class="card card_full">
-					<img class="card__image" src="<%=require('../images/Subtract.svg')%>" alt="" />
-					<div class="card__column">
-						<span class="card__category card__category_other">другое</span>
-						<h2 class="card__title">Бэкенд-антистресс</h2>
-						<p class="card__text">Если планируете решать задачи в тренажёре, берите два.</p>
-						<div class="card__row">
-							<button class="button">В корзину</button>
-							<span class="card__price">1000 синапсов</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
 	<div class="modal">
 		<div class="modal__container">
 			<button class="modal__close" aria-label="закрыть"></button>
@@ -148,8 +128,8 @@
 			<button class="modal__close" aria-label="закрыть"></button>
 			<div class="modal__content">
 				<div class="order-success">
-					<h2 class="film__title">Заказ оформлен</h2>
-					<p class="film__description">Списано 153 250 синапсов</p>
+					<h2 class="order-success__title">Заказ оформлен</h2>
+					<p class="order-success__description">Списано 153 250 синапсов</p>
 					<button class="button order-success__close">За новыми покупками!</button>
 				</div>
 			</div>
@@ -165,12 +145,12 @@
 	</template>
 
 	<template id="card-catalog">
-		<button class="gallery__item card">
-			<span class="card__category card__category_soft">софт-скил</span>
-			<h2 class="card__title">+1 час в сутках</h2>
-			<img class="card__image" src="<%=require('../images/Subtract.svg')%>" alt="" />
-			<span class="card__price">750 синапсов</span>
-		</button>
+			<button class="gallery__item card">
+				<span class="card__category card__category_soft">софт-скил</span>
+				<h2 class="card__title">+1 час в сутках</h2>
+				<img class="card__image" src="<%=require('../images/Subtract.svg')%>" alt="" />
+				<span class="card__price">750 синапсов</span>
+			</button>
 	</template>
 
 	<template id="card-preview">
