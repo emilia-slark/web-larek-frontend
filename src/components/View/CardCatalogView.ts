@@ -16,7 +16,7 @@ export class CardCatalogView extends Card {
 
   set category(value: TCategory) {
     this.setText(this.elementCategory, value);
-    this.elementCategory.classList.add(settings.CATEGORY_SELECTOR[value]);
+    this.elementCategory.className = `card__category ${settings.CATEGORY_SELECTOR[value]}`;
   }
 
   set image(value: string) {

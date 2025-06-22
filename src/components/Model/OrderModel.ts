@@ -19,8 +19,8 @@ export class OrderModel {
       ...info
     };
 
-    if (info.address || info.payment) this.validateRegistration()
-    if (info.email || info.phone) this.validateContacts()
+    this.validateRegistration()
+    this.validateContacts()
   }
 
   validateRegistration(): boolean {
